@@ -14,8 +14,10 @@ ViT(Vision_Transformer)
 
 2. [LSTM, https://static.googleusercontent.com/media/research.google.com/ko//pubs/archive/43905.pdf]
 
-3. [ConvLSTM, https://arxiv.org/pdf/1506.04214.pdf]
+3. [FC LSTM, https://arxiv.org/pdf/1308.0850.pdf]
 
-4. [Semantic Segmentation using ConvLSTM, https://arxiv.org/pdf/1807.07946.pdf]
+4. [ConvLSTM, https://arxiv.org/pdf/1506.04214.pdf]
 
-2. [Vision Transformer, https://arxiv.org/pdf/2010.11929.pdf]
+5. [Semantic Segmentation using ConvLSTM, https://arxiv.org/pdf/1807.07946.pdf]
+
+6. [Vision Transformer, https://arxiv.org/pdf/2010.11929.pdf]
