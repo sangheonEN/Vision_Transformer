@@ -12,10 +12,10 @@ ViT(Vision_Transformer)
 
 1. [RNN, ]
 
-2. [LSTM, ]
+2. [LSTM, https://static.googleusercontent.com/media/research.google.com/ko//pubs/archive/43905.pdf]
 
-3. [ConvLSTM, ]
+3. [ConvLSTM, https://arxiv.org/pdf/1506.04214.pdf]
 
-4. [Semantic Segmentation using ConvLSTM, ]
+4. [Semantic Segmentation using ConvLSTM, https://arxiv.org/pdf/1807.07946.pdf]
 
-2. [Vision Transformer, ]
+2. [Vision Transformer, https://arxiv.org/pdf/2010.11929.pdf]
