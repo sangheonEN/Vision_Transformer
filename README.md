@@ -1,7 +1,7 @@
 # Vision_Transformer
 ViT(Vision_Transformer)
 
-자연어 처리에서 많이 사용되었던 RNN 순환구조를 이제 Vision 영상 이미지 데이터에 적용한 사례를 공부해보자한다.
+자연어 처리에서 많이 사용되었던 RNN 순환구조를 이제 Vision 영상 이미지 데이터에 적용한 내용과 이론을 공부하고 실제 구현도 해보는 것에 목적을 둔다.
 
 따라서, Vision Transformer와 ConvLSTM을 구현하는 목표로 해당 GitHub Repo가 생성되었다.
 
