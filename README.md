@@ -10,7 +10,7 @@ ViT(Vision_Transformer)
 ------------------------------------------------------------------------------------------------------------------------
 관련 문헌
 
-1. [RNN, ]
+1. [RNN, https://arxiv.org/pdf/1409.2329.pdf]
 
 2. [LSTM, https://static.googleusercontent.com/media/research.google.com/ko//pubs/archive/43905.pdf]
 
