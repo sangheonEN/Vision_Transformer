@@ -5,7 +5,18 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 class ConvLSTMCell(nn.Module):
+    """
+    1. 시퀀스별로 나눈 input data를 받아 LSTM 내부적인 연산 수행
+    2. input과 hidden state concat -> channels dimension기준으로
+    3. input과 hidden state concat 후 각 Gate에 input하기 위해 4등분으로 나누어 Convolution 연산 진행
+    4. FC LSTM에서 나온 이전 Cell State의 weight를 각 Gate에 Hadamard Products (self.W_ci, self.W_co, self.W_cf)
+    5. forget, input, output gate 계산
+    6. 미래 시점(t+1)의 Cell, Hidden State 계산
 
+    :return
+    미래 시점 Hidden, Cell State
+
+    """
     def __init__(self, in_channels, out_channels,
                  kernel_size, padding, activation, frame_size):
 
@@ -50,6 +61,18 @@ class ConvLSTMCell(nn.Module):
         return H, C
 
 class ConvLSTM(nn.Module):
+    """
+    1. input data를 전달 받아 반복문으로 시퀀스별로 나눈 input data를 convLSTMcell에 전달
+    2. 초기 hidden, cell state 생성
+    3. 마지막 hidden state array 생성
+
+    :param
+    input data: X shape -> [batch_size, num_channels, seq_len, height, width]
+    H, C data: H, C shape -> [batch_size, out_channels, height, width]
+    output data: output shape -> [batch_size, out_channels, seq_len, height, width]
+    :return
+    시퀀스 수만큼의 Hidden State를 Sequence Dimension을 기준으로 취합하고 반환 [batch_size, output_channels, seq_len, height, width]
+    """
 
     def __init__(self, in_channels, out_channels,
                  kernel_size, padding, activation, frame_size):
@@ -89,6 +112,19 @@ class ConvLSTM(nn.Module):
 
 
 class Seq2Seq(nn.Module):
+    """
+    Multi Layer를 순차적으로 구성하기 위해 nn.Sequential() 사용
+
+    :param
+    num_channels: Initial Input Image channels num
+    num_kernels: Hidden, Cell State channels num
+    kernel_size: kernel size for Convolution operation
+    padding: padding size for Convolution operation
+    activation: tanh or relu for nonlinear LSTM paper 참고
+    frame_size: image frame size
+    num_layers: Multi layer num
+
+    """
 
     def __init__(self, num_channels, num_kernels, kernel_size, padding,
                  activation, frame_size, num_layers):
@@ -122,6 +158,7 @@ class Seq2Seq(nn.Module):
             )
 
             # Add Convolutional Layer to predict output frame
+            # 마지막 frame?
         self.conv = nn.Conv2d(
             in_channels=num_kernels, out_channels=num_channels,
             kernel_size=kernel_size, padding=padding)
@@ -133,6 +170,7 @@ class Seq2Seq(nn.Module):
         # Return only the last output frame
         output = self.conv(output[:, :, -1])
 
+        # 시그모이드는 왜하지?
         return nn.Sigmoid()(output)
 
 

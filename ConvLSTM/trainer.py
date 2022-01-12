@@ -58,6 +58,7 @@ def train(train_data, valid_data, args, device):
 
     train_loader, val_loader = dataset.data_loader(train_data, valid_data, args.batch_size)
 
+    # Seq2Seq -> nn.Sequential 클래스를 이용해 Multi Layer 구성을 만듬.
     model = cl.Seq2Seq(num_channels=1, num_kernels=64, kernel_size=(3, 3),
                        padding=(1, 1), activation='relu', frame_size=(64, 64), num_layers=3).to(device)
 
