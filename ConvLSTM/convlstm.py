@@ -170,7 +170,7 @@ class Seq2Seq(nn.Module):
         # Return only the last output frame
         output = self.conv(output[:, :, -1])
 
-        # 시그모이드는 왜하지?
+        # Sigmoid(output) why? for binary classification!
         return nn.Sigmoid()(output)
 
 
