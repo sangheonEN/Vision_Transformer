@@ -122,6 +122,22 @@ class Bottleneck(nn.Module):
 
 
 class ResNet(nn.Module):
+    """
+    :parameter
+    block: Bottleneck or BasicBlock class
+    layers: Block마다 layer 수 -> block1, 2, 3, 4 = [3, 4, 6, 3]
+    num_classes: 최종 출력 1000-FC Layer
+    zero_init_residual:
+    groups:
+    width_per_group:
+    replace_stride_with_dilation:
+    norm_layer: default-BatchNorm2d
+    downsample: block 넘어갈때 채널 down 하기 위해서 -> ex) resnet50기준 block 1 -> 2로 갈때 1x1, 256 -> 1x1, 128로 변환.
+
+    :return
+    block1, 2, 3, 4 end layer feature map
+    feature_1, feature_2, feature_3, feature_4
+    """
 
     def __init__(self, block, layers, num_classes=1000, zero_init_residual=False,
                  groups=1, width_per_group=64, replace_stride_with_dilation=None,
@@ -145,7 +161,7 @@ class ResNet(nn.Module):
         self.conv1 = nn.Conv2d(3, self.inplanes, kernel_size=7, stride=2, padding=3,
                                bias=False)
         self.bn1 = norm_layer(self.inplanes)
-        self.relu = nn.ReLU(inplace=True)
+        self.relu = nn.ReLU(inplace=True) # inplace=True 하면, inplace 연산을 수행함, inplace 연산은 결과값을 새로운 변수에 값을 저장하는 대신 기존의 데이터를 대체하는것을 의미
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
         self.layer1 = self._make_layer(block, 64, layers[0])
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2,
@@ -159,8 +175,10 @@ class ResNet(nn.Module):
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
+                # m이 nn.Conv2d이면 실행
                 nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
             elif isinstance(m, (nn.BatchNorm2d, nn.GroupNorm)):
+                # m이 nn.BatchNorm2d이거나 nn.GroupNorm이면 실행
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
 
@@ -233,6 +251,19 @@ class ResNet(nn.Module):
 
 
 def _resnet(arch, block, layers, pretrained, progress, **kwargs):
+    """
+    - model url변수에 arch에 저장된 resnet layer 수를 전달하여 pretrained된 weight map 값 불러와서 초기화 시킴!
+
+    - ResNet 클래스에서 resnet의 layer 구성 구현
+
+    :param arch: model layer num
+    :param block: Bottleneck or BasicBlock class
+    :param layers: Block마다 layer 수 -> block1, 2, 3, 4 = [3, 4, 6, 3]
+    :param pretrained:
+    :param progress:
+    :param kwargs:
+    :return: resnet model
+    """
     model = ResNet(block, layers, **kwargs)
     if pretrained:
         state_dict = load_state_dict_from_url(model_urls[arch],
@@ -271,8 +302,11 @@ def resnet50(pretrained=False, progress=True, **kwargs):
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
+        -> 이미지넷 데이터로 사전학습된 weight map 불러오기.
         progress (bool): If True, displays a progress bar of the download to stderr
     """
+
+    # Bottleneck class 파악하기!
     return _resnet('resnet50', Bottleneck, [3, 4, 6, 3], pretrained, progress,
                    **kwargs)
 
@@ -363,3 +397,22 @@ def wide_resnet101_2(pretrained=False, progress=True, **kwargs):
     kwargs['width_per_group'] = 64 * 2
     return _resnet('wide_resnet101_2', Bottleneck, [3, 4, 23, 3],
                    pretrained, progress, **kwargs)
+
+
+if __name__ == "__main__":
+
+    x = torch.rand(32, 3, 128, 128)
+
+    model = resnet50()
+
+    feature1, feature2, feature3, feature4 = model(x)
+
+    print("zz")
+    print("zz")
+    print("zz")
+
+
+
+
+
+
