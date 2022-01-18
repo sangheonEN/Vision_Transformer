@@ -133,6 +133,7 @@ class ResNet(nn.Module):
     replace_stride_with_dilation:
     norm_layer: default-BatchNorm2d
     downsample: block 넘어갈때 채널 down 하기 위해서 -> ex) resnet50기준 block 1 -> 2로 갈때 1x1, 256 -> 1x1, 128로 변환.
+    def _make_layer:
 
     :return
     block1, 2, 3, 4 end layer feature map
@@ -173,6 +174,7 @@ class ResNet(nn.Module):
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         self.fc = nn.Linear(512 * block.expansion, num_classes)
 
+        # ResNet __init__() model 생성할때 한번 각 layer들을 초기화함!
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 # m이 nn.Conv2d이면 실행
@@ -193,6 +195,15 @@ class ResNet(nn.Module):
                     nn.init.constant_(m.bn2.weight, 0)
 
     def _make_layer(self, block, planes, blocks, stride=1, dilate=False):
+        """
+
+        :param block: Bottleneck or BasicBlock class
+        :param planes: initial input block channel
+        :param blocks: block num
+        :param stride:
+        :param dilate:
+        :return:
+        """
         norm_layer = self._norm_layer
         downsample = None
         previous_dilation = self.dilation
